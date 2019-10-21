@@ -2,8 +2,9 @@ FROM python:3-alpine AS builder
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt .
-RUN apk --no-cache --update add \
+COPY requirements.txt /tmp/
+RUN mkdir -p /local/wheels \
+    && apk --no-cache --update add \
         gcc \
         gfortran \
         build-base \
@@ -11,21 +12,21 @@ RUN apk --no-cache --update add \
         freetype-dev \
         libpng-dev \
         libxml2-dev \
-        libxslt-dev
-RUN mkdir -p /local/wheels \
-    && pip wheel --wheel-dir=/local/wheels -r requirements.txt
+        libxslt-dev \
+    && pip wheel --wheel-dir=/local/wheels -r /tmp/requirements.txt
 
 FROM python:3-alpine AS runner
+
 RUN mkdir -p /local/wheels
-COPY requirements.txt .
+COPY requirements.txt /tmp/
 COPY --from=builder /local/wheels /local/wheels
 RUN apk --no-cache --update add \
         graphviz \
-        ttf-freefont
-RUN pip install --no-index --find-links=/local/wheels -r requirements.txt
-RUN rm -r /local/wheels
+    && pip install --no-index --find-links=/local/wheels -r /tmp/requirements.txt \
+    && rm -r /local/wheels /tmp/requirements.txt
 
 VOLUME /var/book
+WORKDIR /var/book
 
 EXPOSE 8000
 
