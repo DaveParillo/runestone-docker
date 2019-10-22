@@ -22,6 +22,7 @@ COPY requirements.txt /tmp/
 COPY --from=builder /local/wheels /local/wheels
 RUN apk --no-cache --update add \
         graphviz \
+        ttf-freefont \
     && pip install --no-index --find-links=/local/wheels -r /tmp/requirements.txt \
     && rm -r /local/wheels /tmp/requirements.txt \
     && sed -i -e '/user not logged in/ d' /usr/local/lib/python3.8/site-packages/runestone/common/js/bookfuncs.js
