@@ -27,7 +27,8 @@ RUN apk --no-cache --update add \
         ttf-freefont \
     && pip install --no-index --find-links=/local/wheels -r /tmp/requirements.txt \
     && rm -r /local/wheels /tmp/requirements.txt \
-    && sed -i -e '/user not logged in/ d' /usr/local/lib/python3.8/site-packages/runestone/dist/runestone.js
+    && sed -i -e '/user not logged in/ d' /usr/local/lib/python3.8/site-packages/runestone/dist/runestone.js \
+    && sed -i -e '/Using a substandard chapter/ d' /usr/local/lib/python3.8/site-packages/runestone/chapterdb/dbchapterinfo.py
     #&& sed -i -e '/user not logged in/ d' /usr/local/lib/python3.8/site-packages/runestone/common/js/bookfuncs.js
 
 VOLUME /var/book
