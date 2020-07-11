@@ -1,2 +1,5 @@
-runestone
+runestone >=5.0
+cython
+numpy
+#numpy < 1.14.4
 matplotlib
